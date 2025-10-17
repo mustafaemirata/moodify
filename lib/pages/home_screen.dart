@@ -9,13 +9,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+  final authService = AuthService();
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authService = AuthService();
     String email = authService.getUserEmail();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Ana Sayfa"),
+        title: const Text("Ana Sayfa"),
         actions: [
           IconButton(
             onPressed: () => authService.signOut(),
@@ -25,9 +34,23 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
         child: Text(
-          "Hoş geldin, $email !",
-          style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+          "Hoş geldin, $email!",
+          style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Ana Sayfa"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline),
+            label: "Oluştur",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Keşfet"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
+        ],
       ),
     );
   }
